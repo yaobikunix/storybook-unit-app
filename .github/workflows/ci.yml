@@ -18,6 +18,9 @@ jobs:
       contents: read # リポジトリの内容を読み取る権限
       pull-requests: write # PRにコメントを書き込む権限（Lint結果を表示するためのもの）
     steps:
+      - name: Debug - Check directory structure
+        run: ls -la
+
       - name: Checkout repository # GitHubリポジトリのコードを取得（Actions環境にコピーする）
         uses: actions/checkout@v4
 
@@ -28,7 +31,7 @@ jobs:
           cache: 'npm' # `npm ci`の実行時にキャッシュを利用して高速化
 
       - name: Install dependencies # 依存関係をインストール（package-lock.json に基づく）
-        working-directory: storybook-unit-app # `storybook-unit-app`ディレクトリ内で実行
+        working-directory: ./ # `storybook-unit-app`ディレクトリ内で実行
         run: npm ci
 
       - name: Run ESLint # ESLintを実行してコードの静的解析を行う
@@ -36,7 +39,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }} # GitHubの認証トークン（PRに結果をコメントするため）
           reporter: github-pr-check # PRのチェックとして結果を表示
-          workdir: './storybook-unit-app' # `storybook-unit-app`ディレクトリで実行
+          workdir: './' # `storybook-unit-app`ディレクトリで実行
 
       - name: Run TypeScript Check # TypeScriptの型チェックを実行
         uses: EPMatt/reviewdog-action-tsc@v1 # reviewdogでTypeScriptの型チェックを実行
@@ -44,7 +47,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check # PRのチェックとして結果を表示
           level: error # エラーとして検出
-          workdir: './storybook-unit-app' # `storybook-unit-app`ディレクトリで実行
+          workdir: './' # `storybook-unit-app`ディレクトリで実行
 
   build-check: # プロジェクトのビルドが正常に完了するかをチェックする
     name: Build Check # ジョブ名
@@ -60,10 +63,10 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies # 依存関係をインストール
-        working-directory: storybook-unit-app
+        working-directory: ./
         run: npm ci
 
       - name: Build project # プロジェクトをビルドして、エラーがないかをチェック
-        working-directory: storybook-unit-app
+        working-directory: ./
         run: npm run build
 
