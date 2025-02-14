@@ -1,27 +1,25 @@
-name: CI # このワークフローの名前（GitHub ActionsのUIで表示される）
+name: CI # GitHub Actions の UI に表示されるワークフロー名
 
 on:
-  push: # mainやdevelopにpushされたときに実行
+  push:
     branches:
       - main
       - develop
-  pull_request: # mainやdevelopに向けてPRが作成・更新されたときに実行
+  pull_request:
     branches:
       - main
       - develop
 
 jobs:
-  lint-check: # コードのLintチェックを実行する
-    name: Lint Check # ジョブ名
-    runs-on: ubuntu-latest # Ubuntuの仮想環境にて実行する
+  lint-format-check:
+    name: Lint & Format Check # コードスタイルや型のチェックを行うジョブ
+    runs-on: ubuntu-latest # 最新の Ubuntu 環境で実行
     permissions:
       contents: read # リポジトリの内容を読み取る権限
       pull-requests: write # PRにコメントを書き込む権限（Lint結果を表示するためのもの）
-    steps:
-      # - name: Debug - Check directory structure
-      #   run: ls -la
 
-      - name: Checkout repository # GitHubリポジトリのコードを取得（Actions環境にコピーする）
+    steps:
+      - name: Checkout repository # リポジトリのコードを取得
         uses: actions/checkout@v4
 
       - name: Set up Node.js # Node.js 20をセットアップ
@@ -31,59 +29,50 @@ jobs:
           cache: 'npm' # `npm ci`の実行時にキャッシュを利用して高速化
           cache-dependency-path: package-lock.json
 
-      - name: Cache dependencies # キャッシュの依存関係をpackage-lock.jsonに固定する
+      - name: Cache dependencies # 依存関係のキャッシュ設定
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: ~/.npm # npm のキャッシュ保存先
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: Install dependencies # 依存関係をインストール（package-lock.json に基づく）
-        working-directory: ./ # `storybook-unit-app`ディレクトリ内で実行
-        run: npm ci
+      - name: Install dependencies # 依存パッケージをインストール
+        run: npm ci # `npm ci` で package-lock.json に基づいてインストール（再現性が高い）
 
-      - name: Run ESLint # ESLintを実行してコードの静的解析を行う
-        uses: reviewdog/action-eslint@v1 # reviewdog（GitHub Actionsのツール）を使ってESLintを実行
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # GitHubの認証トークン（PRに結果をコメントするため）
-          reporter: github-pr-check # PRのチェックとして結果を表示
-          workdir: './' # `storybook-unit-app`ディレクトリで実行
+      - name: Run ESLint # コードの静的解析を実行
+        run: npm run lint # `eslint .` を実行（エラーがあると GitHub Actions で検出）
 
-      - name: Run TypeScript Check # TypeScriptの型チェックを実行
-        uses: EPMatt/reviewdog-action-tsc@v1 # reviewdogでTypeScriptの型チェックを実行
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-check # PRのチェックとして結果を表示
-          level: error # エラーとして検出
-          workdir: './' # `storybook-unit-app`ディレクトリで実行
+      - name: Run TypeScript Check # TypeScript の型チェックを実行
+        run: npm run type-check # `tsc --noEmit` で型エラーをチェック（型ミスを防ぐ）
 
-  build-check: # プロジェクトのビルドが正常に完了するかをチェックする
-    name: Build Check # ジョブ名
-    runs-on: ubuntu-latest # Ubuntu最新版の仮想環境で実行
+      - name: Run Prettier Check # Prettier でコードフォーマットのチェックを実行
+        run: npm run format # `prettier --check .` を実行（フォーマットミスがあると検出）
+
+  build-check:
+    name: Build Check # プロジェクトのビルドを確認するジョブ
+    runs-on: ubuntu-latest # 最新の Ubuntu 環境で実行
+
     steps:
-      - name: Checkout repository # GitHubリポジトリコードを取得
+      - name: Checkout repository # リポジトリのコードを取得
         uses: actions/checkout@v4
 
-      - name: Set up Node.js # Node.js20をセットアップ
+      - name: Set up Node.js # Node.js のセットアップ
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          node-version: 20 # 使用する Node.js のバージョン
+          cache: 'npm' # npm のキャッシュを利用
 
-      - name: Cache dependencies # キャッシュの依存関係をpackage-lock.jsonに固定する
+      - name: Cache dependencies # 依存関係のキャッシュ設定
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: ~/.npm # npm のキャッシュ保存先
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: Install dependencies # 依存関係をインストール
-        working-directory: ./
-        run: npm ci
+      - name: Install dependencies # 依存パッケージをインストール
+        run: npm ci # `npm ci` で package-lock.json に基づいてインストール
 
-      - name: Build project # プロジェクトをビルドして、エラーがないかをチェック
-        working-directory: ./
-        run: npm run build
+      - name: Build project # プロジェクトのビルドを実行
+        run: npm run build # `next build` を実行（ビルドエラーがないか確認）
