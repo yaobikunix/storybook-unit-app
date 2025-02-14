@@ -37,15 +37,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: Install dependencies # 依存パッケージをインストール
-        run: npm ci # `npm ci` で package-lock.json に基づいてインストール（再現性が高い）
-
       - name: Run ESLint # コードの静的解析を実行
-        run: npm run lint # `eslint .` を実行（エラーがあると GitHub Actions で検出）
+        uses: reviewdog/action-eslint@v1 # reviewdog（GitHub Actionsのツール）を使ってESLintを実行
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # GitHubの認証トークン（PRに結果をコメントするため）
+          reporter: github-pr-check # PRのチェックとして結果を表示
+          workdir: './' # `storybook-unit-app`ディレクトリで実行
 
       - name: Run TypeScript Check # TypeScript の型チェックを実行
-        run: npm run type-check # `tsc --noEmit` で型エラーをチェック（型ミスを防ぐ）
+        uses: EPMatt/reviewdog-action-tsc@v1 # reviewdogでTypeScriptの型チェックを実行
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check # PRのチェックとして結果を表示
+          level: error # エラーとして検出
+          workdir: './' # `storybook-unit-app`ディレクトリで実行
 
+      - name: Install dependencies # 依存パッケージをインストール
+        run: npm ci # `npm ci` で package-lock.json に基づいてインストール（再現性が高い）
+      
       - name: Run Prettier Check # Prettier でコードフォーマットのチェックを実行
         run: npm run format # `prettier --check .` を実行（フォーマットミスがあると検出）
 
@@ -57,11 +66,12 @@ jobs:
       - name: Checkout repository # リポジトリのコードを取得
         uses: actions/checkout@v4
 
-      - name: Set up Node.js # Node.js のセットアップ
+      - name: Set up Node.js # Node.js20をセットアップ
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # 使用する Node.js のバージョン
-          cache: 'npm' # npm のキャッシュを利用
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Cache dependencies # 依存関係のキャッシュ設定
         uses: actions/cache@v3
