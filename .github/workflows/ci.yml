@@ -54,7 +54,7 @@ jobs:
 
       - name: Install dependencies # 依存パッケージをインストール
         run: npm ci # `npm ci` で package-lock.json に基づいてインストール（再現性が高い）
-      
+
       - name: Run Prettier Check # Prettier でコードフォーマットのチェックを実行
         run: npm run format # `prettier --check .` を実行（フォーマットミスがあると検出）
 
