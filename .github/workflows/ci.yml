@@ -87,4 +87,3 @@ jobs:
       - name: Build project # プロジェクトをビルドして、エラーがないかをチェック
         working-directory: ./
         run: npm run build
-
