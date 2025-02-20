@@ -37,12 +37,15 @@ const eslintConfig = [
       'prettier/prettier': ['error', { singleQuote: true, endOfLine: 'lf' }], // 改行コードを LF（Linux/macOS 標準）に統一
       'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }], // 連続した空行を制限する(改行の調整)
       'react/react-in-jsx-scope': 'off', // Next.jsでは不要
+      'react/no-unescaped-entities': 'off', // 未エスケープの ", ' に関する警告をスルー
       /** stylistic */
       '@stylistic/quotes': ['error', 'single'], // ESLint 側もシングルクオートに統一
       '@stylistic/object-curly-spacing': ['error', 'always'], // {} の内側にスペースを入れる
       '@stylistic/jsx-quotes': ['error', 'prefer-double'], // JSXの属性値はダブルクォートで囲む
       '@stylistic/jsx-one-expression-per-line': 'off', // JSX内の改行制限を無効化
       '@stylistic/multiline-ternary': 'off', // 三項演算子は1行で書いても分けてもOK
+      '@stylistic/operator-linebreak': 'off', // 改行位置のエラーを無視
+      '@stylistic/quote-props': ['error', 'consistent-as-needed'], // プロパティのクオートを適切に統一
       /** eslint-plugin-unicorn */
       'unicorn/consistent-empty-array-spread': 'error', // 一貫性のある空の配列の展開を強制する
       'unicorn/throw-new-error': 'error', // throw する Error は必ず new する
