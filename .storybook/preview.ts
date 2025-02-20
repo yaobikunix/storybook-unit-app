@@ -3,8 +3,6 @@ import '../src/app/globals.css';
 
 import type { Preview } from '@storybook/react';
 import { initialize, mswLoader } from 'msw-storybook-addon';
-
-// import { handlers } from '../src/mocks/handlers/userProfile';
 import { handlers } from '../src/services/mocks/handlers';
 
 /* MSW を初期化する */
@@ -22,7 +20,7 @@ const preview: Preview = {
       },
     },
 
-    // msw: handlers,　// ここでAPIのモックを適用
+    // ここでAPIのモックを適用
     msw: [...handlers],
   },
 
