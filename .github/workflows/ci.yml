@@ -29,13 +29,16 @@ jobs:
           cache: 'npm' # `npm ci`の実行時にキャッシュを利用して高速化
           cache-dependency-path: package-lock.json
 
-      - name: Cache dependencies # 依存関係のキャッシュ設定
-        uses: actions/cache@v3
+      - name: Cache dependencies and build
+        uses: actions/cache@v4
         with:
-          path: ~/.npm # npm のキャッシュ保存先
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          path: |
+            ~/.npm
+            ./node_modules
+            ./.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
           restore-keys: |
-            ${{ runner.os }}-npm-
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Run ESLint # コードの静的解析を実行
         uses: reviewdog/action-eslint@v1 # reviewdog（GitHub Actionsのツール）を使ってESLintを実行
@@ -73,13 +76,16 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
-      - name: Cache dependencies # 依存関係のキャッシュ設定
-        uses: actions/cache@v3
+      - name: Cache dependencies and build
+        uses: actions/cache@v4
         with:
-          path: ~/.npm # npm のキャッシュ保存先
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          path: |
+            ~/.npm
+            ./node_modules
+            ./.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
           restore-keys: |
-            ${{ runner.os }}-npm-
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Install dependencies # 依存パッケージをインストール
         run: npm ci # `npm ci` で package-lock.json に基づいてインストール
