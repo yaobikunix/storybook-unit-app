@@ -3,17 +3,29 @@
 import useSWR from 'swr';
 import { fetchUser } from '@/services/user/action';
 
-export default function User() {
-  const {
-    data: user,
-    error,
-    mutate,
-  } = useSWR('/api/user', fetchUser, {
+export const useUser = () => {
+  const { data, error, mutate } = useSWR('/api/user', fetchUser, {
     // キャッシュの設定を調整
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: 0,
   });
+
+  return { user: data, error, mutate };
+};
+
+export default function User() {
+  // const {
+  //   data: user,
+  //   error,
+  //   mutate,
+  // } = useSWR('/api/user', fetchUser, {
+  //   // キャッシュの設定を調整
+  //   revalidateOnFocus: false,
+  //   revalidateOnReconnect: false,
+  //   dedupingInterval: 0,
+  // });
+  const { user, error, mutate } = useUser();
 
   if (error && !user) return <p>Loading...</p>;
   if (error) return <p>Failed to load user</p>;

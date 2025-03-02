@@ -1,5 +1,5 @@
 import User from '@/components/User';
-import { handlers } from '@/services/mocks/handlers';
+import { userHandler } from '@/services/user/handler';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -9,14 +9,18 @@ const meta = {
   parameters: {
     layout: 'centered',
     // ここでは、Storyレベルでハンドラを設定しています。
-    msw: {
-      handlers: [...handlers],
-    },
+    msw: userHandler[0],
   },
 } satisfies Meta<typeof User>;
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+
+export const Mock: Story = {
+  args: {
+    msw: userHandler[0],
+  },
+};
 
 export const Default: Story = {
   args: {

@@ -21,7 +21,7 @@ const preview: Preview = {
     },
 
     // ここでAPIのモックを適用
-    msw: [...handlers],
+    msw: handlers,
   },
 
   tags: ['autodocs'],
