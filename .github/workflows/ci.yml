@@ -40,6 +40,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
+      - name: Install dependencies # 依存パッケージをインストール
+        run: npm ci # `npm ci` で package-lock.json に基づいてインストール（再現性が高い）
+
+      - name: Run Prettier Check # Prettier でコードフォーマットのチェックを実行
+        run: npm run format # `prettier --check .` を実行（フォーマットミスがあると検出）
+
       - name: Run ESLint # コードの静的解析を実行
         uses: reviewdog/action-eslint@v1 # reviewdog（GitHub Actionsのツール）を使ってESLintを実行
         with:
@@ -54,12 +60,6 @@ jobs:
           reporter: github-pr-check # PRのチェックとして結果を表示
           level: error # エラーとして検出
           workdir: './' # `storybook-unit-app`ディレクトリで実行
-
-      - name: Install dependencies # 依存パッケージをインストール
-        run: npm ci # `npm ci` で package-lock.json に基づいてインストール（再現性が高い）
-
-      - name: Run Prettier Check # Prettier でコードフォーマットのチェックを実行
-        run: npm run format # `prettier --check .` を実行（フォーマットミスがあると検出）
 
   build-check:
     name: Build Check # プロジェクトのビルドを確認するジョブ
