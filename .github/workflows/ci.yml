@@ -90,7 +90,7 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
       - name: Install dependencies # 依存パッケージをインストール
-        run: npm ci # `npm ci` で package-lock.json に基づいてインストール
+        run: npm install # `npm install` を使用
 
       - name: Build project # プロジェクトのビルドを実行
         run: npm run build # `next build` を実行（ビルドエラーがないか確認）
