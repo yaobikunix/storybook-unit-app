@@ -7,13 +7,18 @@ import type { NextConfig } from 'next';
  * config.resolve.alias で "msw/node": false にすることで、Webpack に「このモジュールは無視していい」と指示できます。
  */
 const nextConfig: NextConfig = {
-  /* config options here */
-  // webpack: (config, { isServer }) => {
-  //   if (!isServer) {
-  //     config.resolve.alias["msw/node"] = false;
-  //   }
-  //   return config;
-  // },
+  webpack: (config) => {
+    config.resolve = {
+      ...config.resolve,
+      fallback: {
+        fs: false,      // 'fs' モジュールを無効化
+        path: false,    // 'path' モジュールを無効化
+        os: false,      // 'os' モジュールを無効化
+        ...config.resolve.fallback, // 既存の設定を引き継ぐ
+      },
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
