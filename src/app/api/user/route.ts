@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  if (process.env.NEXT_PUBLIC_USE_API_ROUTE === 'false') {
-    return new Response(null, { status: 404 });
-  }
+  // if (process.env.NEXT_PUBLIC_USE_API_ROUTE === 'disabled') {
+  //   console.log('sample',process.env.SAMPLE)
+  //   return new Response(null, { status: 400 });
+  // }
 
   try {
     // const url = '/api/user';
@@ -18,6 +19,7 @@ export async function GET() {
     // const json = await res.json();
 
     const userData = {
+      age: 20,
       firstName: 'API',
       lastName: 'API/ROUTE',
     };
