@@ -1,10 +1,22 @@
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse /* delay */ } from 'msw';
+
+// headers: { 'Access-Control-Allow-Origin': '*' },
+export const response = {
+  status: 200,
+  meta: {
+    page: 1, // 現在のページ
+    perPage: 10, // 1ページあたりのアイテム数
+    totalCount: 10, // ユーザーの総数
+  },
+  data: [{ age: 30, firstName: 'MOCK', lastName: 'HANDLER' }],
+};
 
 export const userHandler = [
-  http.get('/api/user', () => {
-    return HttpResponse.json(
-      { firstName: 'MOCK', lastName: 'HANDLER' },
-      { status: 200 },
-    );
-  }),
+  http.get(
+    '/api/user',
+    /* async */ () => {
+      // await delay('real');
+      return HttpResponse.json(response);
+    },
+  ),
 ];

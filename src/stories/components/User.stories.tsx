@@ -1,7 +1,22 @@
 import User from '@/components/User';
-import { userHandler } from '@/services/user/handler';
+import { response, userHandler } from '@/services/user/handler';
 
 import type { Meta, StoryObj } from '@storybook/react';
+
+// import { http, HttpResponse, delay } from 'msw';
+// const TestData = {
+//   user: {
+//     userID: 1,
+//     name: 'Someone',
+//   },
+//   document: {
+//     id: 1,
+//     userID: 1,
+//     title: 'Something',
+//     brief: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+//     status: 'approved',
+//   }
+// }
 
 const meta = {
   title: 'components/User',
@@ -9,16 +24,29 @@ const meta = {
   parameters: {
     layout: 'centered',
     // ここでは、Storyレベルでハンドラを設定しています。
-    msw: userHandler[0],
+    // msw: userHandler[0],
   },
 } satisfies Meta<typeof User>;
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Mock: Story = {
+// export const MockedSuccess: Story = {
+//   parameters: {
+//     msw: {
+//       handlers: [
+//         http.get('/api/user', () => {
+//           return HttpResponse.json(data);
+//         }),
+//       ],
+//     },
+//   },
+// };
+
+export const MockAPI: Story = {
   args: {
-    msw: userHandler[0],
+    handler: userHandler,
+    response: response,
   },
 };
 

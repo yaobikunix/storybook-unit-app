@@ -9,7 +9,7 @@ const initializeMSW = async () => {
     if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
       const { startMSW } = await import('@/services/mocks');
       await startMSW();
-      return true;
+      // return true;
     }
     return true;
   } catch (error) {
