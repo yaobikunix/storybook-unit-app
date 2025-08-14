@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 /** クライアント側でMSWを実行するためのラップコンポーネント */
-import { MockingProvider } from '@/components/MockingProvider';
+import { MockingProvider } from './MockingProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

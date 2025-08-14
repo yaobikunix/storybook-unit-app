@@ -1,4 +1,4 @@
-import { http, HttpResponse /* delay */ } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 // headers: { 'Access-Control-Allow-Origin': '*' },
 export const response = {
@@ -13,7 +13,7 @@ export const response = {
 
 export const userHandler = [
   http.get(
-    '/api/user',
+    'http://localhost:3000/api/users',
     /* async */ () => {
       // await delay('real');
       return HttpResponse.json(response);

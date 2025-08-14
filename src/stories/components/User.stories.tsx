@@ -53,7 +53,7 @@ export const MockAPI: Story = {
 export const Default: Story = {
   args: {
     user: {
-      firstName: 'Neil',
+      firstName: 'Neilxxxxxxx',
       lastName: 'Maverick',
     },
   },

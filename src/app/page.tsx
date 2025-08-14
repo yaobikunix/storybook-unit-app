@@ -1,3 +1,4 @@
+import Test from '@/components/Test';
 import User from '@/components/User';
 
 export default function HomePage() {
@@ -8,6 +9,7 @@ export default function HomePage() {
 
         {/** user情報の表示 */}
         <User />
+        <Test />
       </main>
 
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>

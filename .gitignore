@@ -31,7 +31,9 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env
+.env*
+# テンプレートの .env.example は管理対象
+!.env.example
 
 # vercel
 .vercel
