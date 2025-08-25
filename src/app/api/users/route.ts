@@ -1,62 +1,37 @@
 import { NextResponse } from 'next/server';
 
-const data = {
-  age: 20,
-  firstName: 'API',
-  lastName: 'API/ROUTE',
-};
-
 export async function GET() {
-  // if (process.env.NEXT_PUBLIC_USE_API_ROUTE === 'disabled') {
-  //   console.log('sample',process.env.SAMPLE)
-  //   return new Response(null, { status: 400 });
-  // }
+  // 'https://jsonplaceholder.typicode.com/
+  const endpoint = `${process.env.EXTERNAL_API_URL}/users`;
 
   try {
-    const res = await fetch(`${process.env.ROUTE_API_URL}/users`, {
+    console.log('Fetching user data... EXTERNAL_API_URL:', endpoint);
+    const res = await fetch(endpoint, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
       },
     });
 
-    if (!res.ok) throw new Error('Failed to fetch user');
-    // const json = await res.json();
+    if (!res.ok) {
+      throw new Error('Failed to fetch user');
+    }
 
-    // // 正常にレスポンスを返す
-    return NextResponse.json(data, {
+    // 正常にレスポンスを返す
+    const data = await res.json();
+    return NextResponse.json({
       status: 200,
+      data: data,
+      meta: { page: 1, perPage: 10, totalCount: 10 },
     });
-  } catch (error) {
-    // エラー時のレスポンス
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 },
-    );
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+
+    if (err instanceof Error) {
+      console.error('Error stack:', err.stack);
+    }
+
+    // エラーレスポンスを返す
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  // try {
-  //   const endpoint = `${process.env.ROUTE_API_URL}/users`;
-  //   const res = await fetch(endpoint, {
-  //     method: 'GET',
-  //     cache: 'no-store',
-  //     headers: {
-  //       Accept: 'application/json',
-  //     },
-  //   });
-  //   const data = await res.json();
-
-  //   if (!res.ok) {
-  //     throw new Error('Failed to fetch user data')
-  //   };
-
-  //   return NextResponse.json(data, {
-  //     status: 200,
-  //   });
-  // } catch (error: unknown) {
-  //   return NextResponse.json(
-  //     { error: (error as Error).message },
-  //     { status: 500 },
-  //   );
-  // }
 }

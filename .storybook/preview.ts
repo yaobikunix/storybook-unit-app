@@ -3,7 +3,7 @@ import '../src/app/globals.css';
 
 import type { Preview } from '@storybook/react';
 import { initialize, mswLoader } from 'msw-storybook-addon';
-import { handlers } from '../src/services/mocks/handlers';
+import { handlers } from '../src/mocks/handlers';
 
 /* MSW を初期化する */
 initialize({ onUnhandledRequest: 'bypass' });

@@ -1,22 +1,9 @@
 import User from '@/components/User';
-import { response, userHandler } from '@/services/user/handler';
-
 import type { Meta, StoryObj } from '@storybook/react';
 
-// import { http, HttpResponse, delay } from 'msw';
-// const TestData = {
-//   user: {
-//     userID: 1,
-//     name: 'Someone',
-//   },
-//   document: {
-//     id: 1,
-//     userID: 1,
-//     title: 'Something',
-//     brief: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-//     status: 'approved',
-//   }
-// }
+// ここより、モック用のAPIを傍受してStoryBookにて一覧化する
+import { userHandler } from '@/mocks/user/handler';
+import { mockUserResponse } from '@/mocks/user/response';
 
 const meta = {
   title: 'components/User',
@@ -31,34 +18,30 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// export const MockedSuccess: Story = {
-//   parameters: {
-//     msw: {
-//       handlers: [
-//         http.get('/api/user', () => {
-//           return HttpResponse.json(data);
-//         }),
-//       ],
-//     },
-//   },
-// };
-
+/* ===========================
+    API Mock Stories
+============================= */
 export const MockAPI: Story = {
   args: {
     handler: userHandler,
-    response: response,
+    mockData: mockUserResponse,
   },
 };
 
+/* ===========================
+    UI State Stories
+============================= */
+// 初期状態
 export const Default: Story = {
   args: {
     user: {
-      firstName: 'Neilxxxxxxx',
+      firstName: 'Neil',
       lastName: 'Maverick',
     },
   },
 };
 
+// 名前が長い時の状態
 export const LongNames: Story = {
   args: {
     user: {

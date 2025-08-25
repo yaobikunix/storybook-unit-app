@@ -8,7 +8,7 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials', // controls, actions, docs などの基本機能セット
     '@storybook/addon-interactions', // ユーザー操作シミュレーションやテスト用
     '@storybook/addon-onboarding', // Storybook の導入チュートリアル（ガイド）
-    // '@storybook/addon-mdx-gfm',   //MDXを使わないなら不要
+    // '@storybook/addon-mdx-gfm',   // MDXを使わないなら不要
   ],
 
   framework: {
